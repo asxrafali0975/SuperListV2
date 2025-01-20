@@ -84,13 +84,13 @@
         />
         <input
             type="text"
-            placeholder="Enter your username"
+            placeholder="Username"
             bind:value={username}
             class="input input-bordered input-primary w-full max-w-xs"
         />
         <input
             type="text"
-            placeholder="Enter your username"
+            placeholder="Password"
             bind:value={password}
             class="input input-bordered input-primary w-full max-w-xs"
         />

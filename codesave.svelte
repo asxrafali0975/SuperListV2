@@ -1,68 +1,67 @@
 <script>
-    import { onMount } from 'svelte';
     import '../+page.svelte'
-    import { goto } from '$app/navigation';
-
-import { arr } from '../../store';
+    import { arr } from '../../store';
     
-        let input_value = $state(null);
-        let storage_arr=[];
-       
     
-    onMount(()=>{
-        if(!localStorage.getItem("superlist")){
-            goto('/login')
-
-        }
-         
-        let stored_tasks=localStorage.getItem("superlist_tasks")
-        if(stored_tasks){
-            stored_tasks=JSON.parse(stored_tasks)
-             $arr=stored_tasks
-        }
-    })
-
-    const addtask=()=>{
-        let obj={data:input_value,status:false}
-        $arr=[...$arr,obj]
-        input_value=""
-
+    const finished=(index)=>{
+        $arr[index].status=!$arr[index].status;
         localStorage.setItem("superlist_tasks", JSON.stringify($arr));
-        
-
-
     
     }
-
-
-</script>
-
-<div id="container" class="bg-slate-600 h-[100vh] w-[100vw]">
-    <div id="one" class="bg-slate-950 h-[30%] w-[100%] flex items-center justify-around">
-        <input type="text" placeholder="Enter your task" bind:value={input_value} class=" h-[23%] font-medium rounded-md w-[68%] focus:border-2  focus:border-black" >
-        <button class="btn bg-blue-300 h-[23%] rounded-md p-2 flex items-center justify-center" onclick={addtask}>Add Task</button>
-
-    </div>
-    <div id="two" class="flex h-[70%] flex-col ">
-        <div id="one" class="mid bg-yellow-400 w-[100%] h-[50%] font-semibold  ">Total tasks {$arr.length} </div>
-        <div id="two" class="mid bg-red-400 w-[100%] h-[50%]" onclick={()=>goto('/viewtask')}>View tasks</div>
-    </div>
-
-
-</div>
-
-
-<style>
-    .btn{
-        font-size: 2vmin;
-
+    const deletetask=(index)=>{
+        let dummy = $arr
+        dummy.splice(index,1)
+        $arr=dummy
+        localStorage.setItem("superlist_tasks", JSON.stringify($arr));
+    
+    
     }
-
-    .mid{
-        display: flex;
-        align-items: center;
-        justify-content: center ;
-        font-size: larger;
-    }
-
-</style>
+    
+    </script>
+    
+    
+    <div class="bg-slate-800 h-[1000000vh] w-[100vw] p-3">
+        <h1 class="center bg-blue-600 font-serif h-[0.0007%]" >Tasks Lists</h1>
+    
+    {#each $arr as value, index}
+    <div class="border"> 
+        <h1  class={value.status ?  " done bg-slate-400 m-2 font-serif " : "bg-slate-400 m-2 font-serif " } > {index}->{value.data}</h1>
+        <button class="bg-green-300 rounded-md " onclick={()=>finished(index)}>{ value.status ? "Undone" :"Done"  }</button>
+        <button class="bg-red-300 rounded-md"  onclick={()=>deletetask(index)}>Delete</button>
+    </div>
+    
+    {/each}
+    
+    </div>
+    
+    
+    <style>
+        h1{
+            font-size: 3vw;
+            border: 1.5px solid black;
+            border-radius: 5px;
+            
+        }
+        
+        .border{
+            border: 2px solid black;
+            margin-bottom:14px;
+        }
+    
+        .center{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 600;
+            
+        }
+    
+        .done{
+            background-color: rgb(153, 235, 160);
+            text-decoration: line-through;
+        }
+        
+        
+    </style>
