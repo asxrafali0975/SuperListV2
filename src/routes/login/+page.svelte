@@ -10,20 +10,29 @@
         let mode = localStorage.getItem("superListMode").trim();
 
         $MODE = parseFloat(mode);
-        let token = localStorage.getItem("superlist");
-
-        if (token) {
-            goto("/homepage");
-        }
     });
 
     const loginBtn = () => {
-        let token = localStorage.setItem(
-            "superlist",
-            JSON.stringify({ username, password }),
-        );
-        alert("login done");
-        goto("/homepage");
+        let token = localStorage.getItem("superlist");
+        if (token) {
+            token = JSON.parse(token);
+            if (
+                token.username.trim() == username &&
+                token.password == password
+            ) {
+                alert("login succesfull");
+                goto("/homepage");
+            } else {
+                alert("wrong username or password Try again!!");
+            }
+        } else {
+            let token = localStorage.setItem(
+                "superlist",
+                JSON.stringify({ username, password }),
+            );
+            alert("Account Created !! remember your credentials");
+            goto("/homepage");
+        }
     };
 
     let toggle = $state(true);
