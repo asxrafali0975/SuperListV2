@@ -1,10 +1,18 @@
 <script>
+    // imports
+
     import "../+page.svelte";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
     import { MODE } from "../../store";
+
+    // initialization
+
     let username = $state(null);
     let password = $state(null);
+    let toggle = $state(true);
+
+    //  FUNCTIONS
 
     onMount(() => {
         let mode = localStorage.getItem("superListMode").trim();
@@ -35,13 +43,21 @@
         }
     };
 
-    let toggle = $state(true);
-
     const toggleFnc = () => {
         let tog = $MODE;
         tog = tog === 1 ? 0 : 1;
         $MODE = tog;
         localStorage.setItem("superListMode", $MODE);
+    };
+
+    const linkfunc = () => {
+        let token = localStorage.getItem("superlist");
+
+        if (!token) {
+            alert("Accout do not exist , create new account !!");
+        } else {
+            goto("/homepage");
+        }
     };
 </script>
 
@@ -91,6 +107,7 @@
                 ? "rounded-full border-2 border-black sm:h-[15%]"
                 : "rounded-full img_back sm:h-[15%]"}
         />
+        <h1 class=" size text-[4vw] font-semibold font-mono">SuperList</h1>
         <input
             type="text"
             placeholder="Username"
@@ -98,7 +115,7 @@
             class="input input-bordered input-primary w-full max-w-xs"
         />
         <input
-            type="text"
+            type="password"
             placeholder="Password"
             bind:value={password}
             class="input input-bordered input-primary w-full max-w-xs"
@@ -106,6 +123,9 @@
 
         <button class="btn btn-primary bg-blue-400" onclick={loginBtn}
             >Login</button
+        >
+        <button class="btn btn-active btn-link" onclick={linkfunc}
+            >Already have account ? go to homepage</button
         >
     </div>
 </div>
@@ -124,6 +144,12 @@
             display: flex;
             align-items: center;
             justify-content: end;
+        }
+        input {
+            width: 70%;
+        }
+        .size {
+            font-size: 7vw;
         }
     }
 </style>

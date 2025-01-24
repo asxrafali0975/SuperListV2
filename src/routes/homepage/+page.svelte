@@ -3,8 +3,9 @@
     import "../+page.svelte";
     import { goto } from "$app/navigation";
     import { MODE } from "../../store";
-
+  
     import { arr } from "../../store";
+    import TimeCompo from "../components/TimeCompo.svelte";
 
     let input_value = $state(null);
     let storage_arr = [];
@@ -14,7 +15,8 @@
 
         $MODE = parseFloat(mode);
         let token = localStorage.getItem("superlist");
-        if (!localStorage.getItem("superlist")) {
+
+        if (!token) {
             goto("/login");
         }
 
@@ -23,9 +25,14 @@
             stored_tasks = JSON.parse(stored_tasks);
             $arr = stored_tasks;
         }
+       
     });
 
     const addtask = () => {
+        if(!input_value){
+            alert("Tasks cannot be empty")
+            return 
+        }
         let obj = { data: input_value, status: false };
         $arr = [...$arr, obj];
         input_value = "";
@@ -39,6 +46,14 @@
         $MODE = tog;
         localStorage.setItem("superListMode", $MODE);
     };
+    let doneTasks=$state(0)
+
+    $arr.forEach((value)=>{
+        if(value.status===true)doneTasks++
+
+    })
+
+   
 </script>
 
 <div
@@ -46,12 +61,11 @@
     data-theme={$MODE ? "valentine" : "dark"}
     class="h-[100vh] w-[100vw] flex items-center justify-center flex-col"
 >
-    <div
-        id="toggleBtn"
-        class=" w-full flex items-center border-2 border-b-white justify-between"
-    >
-        <h1>SuperList</h1>
-        <h1 class="font-bold font-serif">Task-page</h1>
+    <div id="toggleBtn" class=" w-full flex items-center justify-between">
+        <div class="h-[100%]  flex items-center justify-center">
+           <TimeCompo/>
+        </div>
+        <h1 class="font-bold font-serif">Task-page</h1> 
 
         <label class="swap swap-rotate pr-4">
             <!-- this hidden checkbox controls the state -->
@@ -104,22 +118,32 @@
             >
         </div>
         <div id="two" class="h-[80%] w-full">
+
+            <!-- WORK IS GOING ON HERE -->
             <div
-                id="two-one"
-                class=" w-full h-[50%] flex items-center justify-center"
+            id="two-one"
+                class=" w-full h-[50%] flex items-center justify-evenly"
             >
-                <button class="btn p-10 btn-success"
-                    >Total tasks -> {$arr.length}</button
-                >
+           
+            <button class="btn  btn-secondary  bg-[#FF204E]  btn-md sm:btn-lg md:btn-lg lg:btn-lg  "
+            >Remaining Tasks {$arr.length-doneTasks}</button
+        >
+
+            <button class="btn btn-accent bg-[#9EC8B9]   btn-md sm:btn-lg md:btn-lg lg:btn-lg  " >Finished Tasks {doneTasks}</button>
+               
             </div>
             <div
                 id="two-two"
-                class=" w-full h-[50%] flex items-center justify-center"
+                class=" w-full h-[50%] flex items-center justify-evenly "
             >
-                <button
-                    class="btn btn-warning p-10"
+
+            <button class="btn btn-accent bg-[#EEE4B1] btn-md sm:btn-lg md:btn-lg lg:btn-lg  " >Total tasks -> {$arr.length}</button>
+            <button class="btn btn-warning  btn-md sm:btn-lg md:btn-lg lg:btn-lg "
                     onclick={() => goto("/viewtask")}>View Tasks</button
                 >
+               
+
+
             </div>
         </div>
     </div>
@@ -132,18 +156,26 @@
             align-items: center;
             justify-content: space-evenly;
             flex-direction: column;
+            
         }
         #two {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
+           
         }
+
         #input {
             width: 80%;
         }
         #btn {
             width: 20%;
         }
+    }
+
+    #toggleBtn,
+    #one {
+        border-bottom: 1.5px solid rgba(214, 214, 214, 0.689);
     }
 </style>
