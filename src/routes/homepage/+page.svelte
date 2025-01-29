@@ -3,7 +3,7 @@
     import "../+page.svelte";
     import { goto } from "$app/navigation";
     import { MODE } from "../../store";
-  
+
     import { arr } from "../../store";
     import TimeCompo from "../components/TimeCompo.svelte";
 
@@ -25,13 +25,16 @@
             stored_tasks = JSON.parse(stored_tasks);
             $arr = stored_tasks;
         }
-       
+
+        $arr.forEach((value) => {
+            if (value.status === true) doneTasks++;
+        });
     });
 
     const addtask = () => {
-        if(!input_value){
-            alert("Tasks cannot be empty")
-            return 
+        if (!input_value) {
+            alert("Tasks cannot be empty");
+            return;
         }
         let obj = { data: input_value, status: false };
         $arr = [...$arr, obj];
@@ -46,26 +49,19 @@
         $MODE = tog;
         localStorage.setItem("superListMode", $MODE);
     };
-    let doneTasks=$state(0)
-
-    $arr.forEach((value)=>{
-        if(value.status===true)doneTasks++
-
-    })
-
-   
+    let doneTasks = $state(0);
 </script>
 
 <div
     id="container"
-    data-theme={$MODE ? "valentine" : "dark"}
+    data-theme={$MODE ? "nord" : "dim"}
     class="h-[100vh] w-[100vw] flex items-center justify-center flex-col"
 >
     <div id="toggleBtn" class=" w-full flex items-center justify-between">
-        <div class="h-[100%]  flex items-center justify-center">
-           <TimeCompo/>
+        <div class="h-[100%] flex items-center justify-center">
+            <TimeCompo />
         </div>
-        <h1 class="font-bold font-serif">Task-page</h1> 
+        <h1 class="font-bold font-serif">Task-page</h1>
 
         <label class="swap swap-rotate pr-4">
             <!-- this hidden checkbox controls the state -->
@@ -106,8 +102,8 @@
                 type="text"
                 placeholder="Enter The Task"
                 class={$MODE
-                    ? "input  input-bordered  w-full max-w-xs focus:border-1 focus:border-black focus:text-black "
-                    : "input  input-bordered  bg-slate-200 text-black  w-full max-w-xs "}
+                    ? "input ring-blue-500 ring-2  input-bordered  w-full max-w-xs focus:border-1 focus:border-black focus:text-black "
+                    : "input  ring-black ring-2  input-bordered  bg-slate-200 text-black  w-full max-w-xs "}
             />
             <button
                 id="btn"
@@ -118,32 +114,38 @@
             >
         </div>
         <div id="two" class="h-[80%] w-full">
-
             <!-- WORK IS GOING ON HERE -->
             <div
-            id="two-one"
+                id="two-one"
                 class=" w-full h-[50%] flex items-center justify-evenly"
             >
-           
-            <button class="btn  btn-secondary  bg-[#FF204E]  btn-md sm:btn-lg md:btn-lg lg:btn-lg  "
-            >Remaining Tasks {$arr.length-doneTasks}</button
-        >
+                <button
+                    class="btn btn-secondary shadow-[#FF204E] shadow-lg bg-[#FF204E] border-2 border-black btn-md sm:btn-lg md:btn-lg lg:btn-lg"
+                    >Remaining Tasks {$arr.length - doneTasks}</button
+                >
 
-            <button class="btn btn-accent bg-[#9EC8B9]   btn-md sm:btn-lg md:btn-lg lg:btn-lg  " >Finished Tasks {doneTasks}</button>
-               
+                <button
+                    class="btn btn-accent shadow-[#9EC8B9] shadow-lg bg-[#9EC8B9] border-2 border-black btn-md sm:btn-lg md:btn-lg lg:btn-lg"
+                    >Finished Tasks {doneTasks}</button
+                >
             </div>
             <div
                 id="two-two"
-                class=" w-full h-[50%] flex items-center justify-evenly "
+                class=" w-full h-[50%] flex items-center justify-evenly"
             >
-
-            <button class="btn btn-accent bg-[#EEE4B1] btn-md sm:btn-lg md:btn-lg lg:btn-lg  " >Total tasks -> {$arr.length}</button>
-            <button class="btn btn-warning  btn-md sm:btn-lg md:btn-lg lg:btn-lg "
+                <button
+                    class="btn btn-accent shadow-[#EEE4B1] shadow-lg bg-[#EEE4B1] border-2 border-black btn-md sm:btn-lg md:btn-lg lg:btn-lg"
+                    >Total tasks ({$arr.length})</button
+                >
+                <button
+                    class="btn shadow-[#EEE4B1] shadow-lg btn-warning btn-md border-2 border-black sm:btn-lg md:btn-lg lg:btn-lg"
                     onclick={() => goto("/viewtask")}>View Tasks</button
                 >
-               
 
-
+                <!-- <button
+                    class="btn btn-warning btn-md sm:btn-lg md:btn-lg lg:btn-lg"
+                    onclick={() => goto("/daily_wins")}>daily_wins</button
+                >   THIS IS UNDER CONSTRUCTION WILL BE AVAILABLE IN next update-->
             </div>
         </div>
     </div>
@@ -156,14 +158,12 @@
             align-items: center;
             justify-content: space-evenly;
             flex-direction: column;
-            
         }
         #two {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-           
         }
 
         #input {
