@@ -14,6 +14,7 @@
     let start_index = null;
     let end_drag_value = null;
     let end_index = null;
+    let filterValue = $state("No-Filter");
 
     //functions
 
@@ -54,31 +55,31 @@
     const dragStart = (index) => {
         start_drag_value = $arr[index];
         start_index = index;
-       
     };
-    const dragTarget = (index,event) => {
+    const dragTarget = (index, event) => {
         end_drag_value = $arr[index];
         end_index = index;
-    
-
     };
     const change = () => {
         $arr[end_index] = start_drag_value;
         $arr[start_index] = end_drag_value;
         localStorage.setItem("superlist_tasks", JSON.stringify($arr));
     };
+
+    const FilterFunc = (e) => {
+        filterValue = e.target.innerHTML;
+    };
 </script>
 
 <div
     id="container"
-    data-theme={$MODE ? "valentine" : "dark"}
+    data-theme={$MODE ? "nord" : "dim"}
     class="h-[1000vh] w-[100vw]"
 >
     <div id="toggleBtn" class=" w-full flex items-center justify-between">
         <div class="h-[100%] flex items-center justify-center">
             <TimeCompo />
         </div>
-        <h1 class="font-bold font-serif">Task-View</h1>
 
         <label class="swap swap-rotate pr-4">
             <!-- this hidden checkbox controls the state -->
@@ -122,7 +123,7 @@
             >
                 <input type="radio" name="my-accordion-4" checked="checked" />
                 <div class="collapse-title text-xl font-small font-mono">
-                    Task {index + 1}
+                    <h1>task {index + 1}</h1>
                 </div>
                 <div class="collapse-content">
                     <h2
@@ -149,7 +150,7 @@
 </div>
 
 <style>
-    .dragging{
+    .dragging {
         background-color: #f07474; /* Example highlight color */
     }
     #toggleBtn {
