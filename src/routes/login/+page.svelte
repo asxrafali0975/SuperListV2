@@ -63,7 +63,7 @@
 
 <div
     id="container"
-    data-theme={$MODE ? "light" : "dracula"}
+    data-theme={$MODE ? "nord" : "dim"}
     class="h-[100vh] w-[100vw] flex items-center justify-center flex-col"
 >
     <div id="toggleBtn" class=" w-full flex items-center justify-end">
@@ -112,13 +112,13 @@
             type="text"
             placeholder="Username"
             bind:value={username}
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input input-accent w-full max-w-xs"
         />
         <input
             type="password"
             placeholder="Password"
             bind:value={password}
-            class="input input-bordered input-primary w-full max-w-xs"
+            class="input input-accent w-full max-w-xs"
         />
 
         <button class="btn btn-primary bg-blue-400" onclick={loginBtn}
